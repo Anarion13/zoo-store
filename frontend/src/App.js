@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import './App.css';
 
@@ -36,9 +36,37 @@ function App() {
   }, []);
 
   useEffect(() => {
+    const updateFilterOptions = () => {
+      const animalTypesSet = new Set(products.map(product => product.animal_type));
+      const productTypesSet = new Set(products.map(product => product.product_type));
+      setAnimalTypes(Array.from(animalTypesSet));
+      setProductTypes(Array.from(productTypesSet));
+    };
+
+    const filterProducts = () => {
+      let filtered = products;
+
+      if (searchTerm) {
+        filtered = filtered.filter(product => 
+          product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          product.description.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }
+
+      if (animalFilters.length > 0) {
+        filtered = filtered.filter(product => animalFilters.includes(product.animal_type));
+      }
+
+      if (productTypeFilters.length > 0) {
+        filtered = filtered.filter(product => productTypeFilters.includes(product.product_type));
+      }
+
+      setFilteredProducts(filtered);
+    };
+
     filterProducts();
     updateFilterOptions();
-  }, [products, searchTerm, animalFilters, productTypeFilters, filterProducts, updateFilterOptions]);
+  }, [products, searchTerm, animalFilters, productTypeFilters]);
 
   const fetchProducts = async () => {
     try {
@@ -49,36 +77,6 @@ function App() {
     } catch (err) {
       console.error('Error fetching products:', err);
     }
-  };
-
-  const updateFilterOptions = () => {
-    const animalTypesSet = new Set(products.map(product => product.animal_type));
-    const productTypesSet = new Set(products.map(product => product.product_type));
-    console.log('Animal types:', Array.from(animalTypesSet)); // Debug log
-    console.log('Product types:', Array.from(productTypesSet)); // Debug log
-    setAnimalTypes(Array.from(animalTypesSet));
-    setProductTypes(Array.from(productTypesSet));
-  };
-
-  const filterProducts = () => {
-    let filtered = products;
-
-    if (searchTerm) {
-      filtered = filtered.filter(product => 
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    if (animalFilters.length > 0) {
-      filtered = filtered.filter(product => animalFilters.includes(product.animal_type));
-    }
-
-    if (productTypeFilters.length > 0) {
-      filtered = filtered.filter(product => productTypeFilters.includes(product.product_type));
-    }
-
-    setFilteredProducts(filtered);
   };
 
   const handleAnimalFilterChange = (animalType) => {
