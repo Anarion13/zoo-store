@@ -13,24 +13,37 @@ app.use(cors({
 app.use(express.json());
 
 // Database connection
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
+// const pool = new Pool({
+//   connectionString: process.env.DATABASE_URL,
+//   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+// });
+const { Pool } = require('pg');
+
+   const pool = new Pool({
+     connectionString: process.env.DATABASE_URL,
+     ssl: {
+       rejectUnauthorized: false
+     }
+   });
 
 // Routes
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
 app.get('/api/products', async (req, res) => {
+  let client;
   try {
-    const client = await pool.connect();
+    client = await pool.connect();
+    console.log('Connected to database in /api/products route');
+    
     const result = await client.query('SELECT * FROM products');
-    const products = result.rows;
-    client.release();
-    res.json(products);
-  } catch (err) {
-    console.error('Error executing query', err);
-    res.status(500).json({ error: 'Internal server error' });
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error in /api/products route:', error);
+    res.status(500).json({ error: 'Internal server error', details: error.message });
+  } finally {
+    if (client) client.release();
   }
 });
 
