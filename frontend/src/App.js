@@ -41,14 +41,6 @@ function App() {
     updateFilterOptions();
   }, [products, searchTerm, animalFilters, productTypeFilters]);
 
-  const { Pool } = require('pg');
-     const pool = new Pool({
-       connectionString: process.env.DATABASE_URL,
-       ssl: {
-         rejectUnauthorized: false
-       }
-     });
-     
   const fetchProducts = async () => {
     try {
       const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
