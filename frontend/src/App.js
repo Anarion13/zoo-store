@@ -70,8 +70,7 @@ function App() {
 
   const fetchProducts = async () => {
     try {
-      const API_URL = 'https://zoo-store-1c8e19fe4b53.herokuapp.com' || 'http://localhost:3000';
-      const response = await axios.get(`${API_URL}/api/products`);
+      const response = await axios.get('/api/products');
       console.log('Fetched products:', response.data); // Debug log
       setProducts(response.data);
     } catch (err) {
