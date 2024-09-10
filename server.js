@@ -1,6 +1,7 @@
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -42,6 +43,14 @@ app.get('/api/products', async (req, res) => {
 });
 
 // Add more routes for categories, users, orders, etc.
+
+// Serve static files from the React frontend app
+app.use(express.static(path.join(__dirname, 'frontend/build')));
+
+// After your API routes, add this:
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/build', 'index.html'));
+});
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
