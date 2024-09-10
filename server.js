@@ -13,18 +13,12 @@ app.use(cors({
 app.use(express.json());
 
 // Database connection
-// const pool = new Pool({
-//   connectionString: process.env.DATABASE_URL,
-//   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
-// });
-const { Pool } = require('pg');
-
-   const pool = new Pool({
-     connectionString: process.env.DATABASE_URL,
-     ssl: {
-       rejectUnauthorized: false
-     }
-   });
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
 
 // Routes
 app.get('/', (req, res) => {
