@@ -21,7 +21,6 @@ const productImages = {
 function App() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [error, setError] = useState(null);
   const [cartItems, setCartItems] = useState({});
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -39,7 +38,7 @@ function App() {
   useEffect(() => {
     filterProducts();
     updateFilterOptions();
-  }, [products, searchTerm, animalFilters, productTypeFilters]);
+  }, [products, searchTerm, animalFilters, productTypeFilters, filterProducts, updateFilterOptions]);
 
   const fetchProducts = async () => {
     try {
@@ -49,7 +48,6 @@ function App() {
       setProducts(response.data);
     } catch (err) {
       console.error('Error fetching products:', err);
-      setError('Failed to fetch products. Please try again later.');
     }
   };
 
