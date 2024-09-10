@@ -5,13 +5,10 @@ const path = require('path');
 require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors({
-  origin: 'https://capable-kheer-8628ec.netlify.app/'
-}));
-app.use(express.json());
+app.use(cors());
 
 // Database connection
 const pool = new Pool({
@@ -21,11 +18,10 @@ const pool = new Pool({
   }
 });
 
-// Routes
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+// Serve static files from the React frontend app
+app.use(express.static(path.join(__dirname, 'frontend/build')));
 
+// Routes
 app.get('/api/products', async (req, res) => {
   let client;
   try {
@@ -44,14 +40,11 @@ app.get('/api/products', async (req, res) => {
 
 // Add more routes for categories, users, orders, etc.
 
-// Serve static files from the React frontend app
-app.use(express.static(path.join(__dirname, 'frontend/build')));
-
 // After your API routes, add this:
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/build', 'index.html'));
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
