@@ -1,18 +1,27 @@
--- Products table
+-- First, create the tables
+CREATE TABLE categories (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL
+);
+
 CREATE TABLE products (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
+  name TEXT NOT NULL,
   description TEXT,
   price DECIMAL(10, 2) NOT NULL,
   category_id INTEGER REFERENCES categories(id),
-  stock INTEGER NOT NULL
+  stock INTEGER NOT NULL,
+  image_url TEXT
 );
 
--- Categories table
-CREATE TABLE categories (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL
-);
+-- Now, insert the data
+INSERT INTO categories (name) VALUES
+('Food'),
+('Toys'),
+('Habitats'),
+('Accessories');
+
+-- Insert products data here...
 
 -- Users table
 CREATE TABLE users (
