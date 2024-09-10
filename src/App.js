@@ -41,9 +41,18 @@ function App() {
     updateFilterOptions();
   }, [products, searchTerm, animalFilters, productTypeFilters]);
 
+  const { Pool } = require('pg');
+     const pool = new Pool({
+       connectionString: process.env.DATABASE_URL,
+       ssl: {
+         rejectUnauthorized: false
+       }
+     });
+     
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/products');
+      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+      const response = await axios.get(`${API_URL}/api/products`);
       console.log('Fetched products:', response.data); // Debug log
       setProducts(response.data);
     } catch (err) {
